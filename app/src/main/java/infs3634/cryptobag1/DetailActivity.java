@@ -71,6 +71,27 @@ public class DetailActivity extends AppCompatActivity {
             }
         });
 
+//        for (final Coin coin : coins) {
+//            if(coin.getSymbol().equals(coinSymbol)) {
+//                setTitle(coin.getName());
+//                mName.setText(coin.getName());
+//                mSymbol.setText(coin.getSymbol());
+//                mValue.setText(formatter.format(coin.getValue()));
+//                mChange1h.setText((coin.getChange1h()) + "%");
+//                mChange24h.setText((coin.getChange24h()) + "%");
+//                mChange7d.setText((coin.getChange7d()) + "%");
+//                mMarketcap.setText(formatter.format(coin.getMarketcap()));
+//                mVolume.setText(formatter.format(coin.getVolume()));
+//                mSearch.setOnClickListener(new View.OnClickListener(){
+//                    @Override
+//                    public void onClick(View v) {
+//                        searchCoin(coin.getName());
+//                    }
+//                });
+//                }
+//            }
+//        }
+
 
 //        mDetailMessage = findViewById(R.id.tvdetailMessage);
 //        mDetailMessage.setText(message);
