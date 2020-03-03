@@ -23,10 +23,10 @@ public class MainActivity extends AppCompatActivity {
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                launchDetailActivity("Hello from Detail Activity ***");
+                launchDetailActivity("BTC");
             }
-
         });
+
     }
 
     private void launchDetailActivity(String message){
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy(){
-        super.onStart();
+        super.onDestroy();
         Log.i(TAG, "onDestroy Called");
     }
 
