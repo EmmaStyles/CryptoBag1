@@ -27,6 +27,7 @@ public class DetailActivity extends AppCompatActivity {
     private TextView mMarketcap;
     private TextView mVolume;
     private ImageView mSearch;
+    private Coin mCoin;
 
     private static final String TAG = "DetailActivity";
 
@@ -45,68 +46,31 @@ public class DetailActivity extends AppCompatActivity {
         mVolume = findViewById(R.id.tvVolumeField);
         mSearch = findViewById(R.id.ivSearch);
 
-
         Intent intent = getIntent();
-        String coinSymbol = intent.getStringExtra(MainActivity.EXTRA_MESSAGE);
+        int position = intent.getIntExtra(MainActivity.EXTRA_MESSAGE, 0);
 
-        Log.i(TAG, "Coin-Symbol = " + coinSymbol);
+        mCoin= Coin.getCoins().get(position);
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
 
-        ArrayList<Coin> coins = Coin.getCoins();
-
-        final Coin coin = Coin.searchCoin(coinSymbol);
-
-        mName.setText(coin.getName());
-        mSymbol.setText(coin.getSymbol());
-        mValue.setText(formatter.format(coin.getValue()));
-        mChange1h.setText((coin.getChange1h()) + "%");
-        mChange24h.setText((coin.getChange24h()) + "%");
-        mChange7d.setText((coin.getChange7d()) + "%");
-        mMarketcap.setText(formatter.format(coin.getMarketcap()));
-        mVolume.setText(formatter.format(coin.getVolume()));
-        mSearch.setOnClickListener(new View.OnClickListener(){
+        setTitle(mCoin.getName());
+        mName.setText(mCoin.getName());
+        mSymbol.setText(mCoin.getSymbol());
+        mValue.setText(formatter.format(mCoin.getValue()));
+        mChange1h.setText(String.valueOf(mCoin.getChange1h()) + "%");
+        mChange24h.setText(String.valueOf(mCoin.getChange24h()) + "%");
+        mChange7d.setText(String.valueOf(mCoin.getChange7d()) + "%");
+        mMarketcap.setText(formatter.format(mCoin.getMarketcap()));
+        mVolume.setText(formatter.format(mCoin.getVolume()));
+        mSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                searchCoin(coin.getName());
+                searchCoin(mCoin.getName());
             }
         });
+    }
 
-//        for (final Coin coin : coins) {
-//            if(coin.getSymbol().equals(coinSymbol)) {
-//                setTitle(coin.getName());
-//                mName.setText(coin.getName());
-//                mSymbol.setText(coin.getSymbol());
-//                mValue.setText(formatter.format(coin.getValue()));
-//                mChange1h.setText((coin.getChange1h()) + "%");
-//                mChange24h.setText((coin.getChange24h()) + "%");
-//                mChange7d.setText((coin.getChange7d()) + "%");
-//                mMarketcap.setText(formatter.format(coin.getMarketcap()));
-//                mVolume.setText(formatter.format(coin.getVolume()));
-//                mSearch.setOnClickListener(new View.OnClickListener(){
-//                    @Override
-//                    public void onClick(View v) {
-//                        searchCoin(coin.getName());
-//                    }
-//                });
-//                }
-//            }
-//        }
-
-
-//        mDetailMessage = findViewById(R.id.tvdetailMessage);
-//        mDetailMessage.setText(message);
-
-//       mShowVideoButton = findViewById(R.id.btnShowVideo);
-//        mShowVideoButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showVideo("https://www.youtube.com/watch?v=-iIbc-h9ijc");
-           }
-//        });
-//    }
-
-    private void showVideo(String url){
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+    private void searchCoin(String name) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com/search?q=" + name));
         startActivity(intent);
     }
 }
