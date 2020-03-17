@@ -18,16 +18,16 @@ import static infs3634.cryptobag1.Coin.searchCoin;
 
 
 public class DetailActivity extends AppCompatActivity {
-    private TextView mName;
-    private TextView mSymbol;
-    private TextView mValue;
-    private TextView mChange1h;
-    private TextView mChange24h;
-    private TextView mChange7d;
-    private TextView mMarketcap;
-    private TextView mVolume;
-    private ImageView mSearch;
-    private Coin mCoin;
+//    private TextView mName;
+//    private TextView mSymbol;
+//    private TextView mValue;
+//    private TextView mChange1h;
+//    private TextView mChange24h;
+//    private TextView mChange7d;
+//    private TextView mMarketcap;
+//    private TextView mVolume;
+//    private ImageView mSearch;
+//    private Coin mCoin;
 
     private static final String TAG = "DetailActivity";
 

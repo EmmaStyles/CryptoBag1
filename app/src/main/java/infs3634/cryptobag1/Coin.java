@@ -89,6 +89,15 @@ public class Coin {
     public void setVolume(double volume) {
         this.volume = volume;
     }
+//FINISH
+    public static Coin getCoin(String id) {
+        for(Coin coin : getCoins()){
+            if (coin.getSymbol().equals(id)) {
+                return coin;
+            }
+        }
+            return null;
+    }
 
     public static ArrayList<Coin> getCoins() {
         ArrayList<Coin> coins = new ArrayList<>();
