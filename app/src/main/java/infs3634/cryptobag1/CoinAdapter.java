@@ -26,7 +26,7 @@ public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.CoinViewHolder
                 arguments.putString(DetailFragment.ARG_ITEM_ID, coin.getSymbol());
                 DetailFragment fragment = new DetailFragment();
                 fragment.setArguments(arguments);
-                mParentActivity.getSupportFragmentManager().beginTransaction().replace(R.id.detail_container, fragment).commit();
+                mParentActivity.getSupportFragmentManager().beginTransaction().replace(R.id.detailContainer, fragment).commit();
             }
             else {
                 Context context = v.getContext();
@@ -36,11 +36,12 @@ public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.CoinViewHolder
     };
 
 
-    public CoinAdapter(MainActivity parent, ArrayList<Coin> coins, boolean mTwoPane) {
-        mParentActivity = parent;
+    public CoinAdapter(ArrayList<Coin> coins, RecyclerViewClickListener listener) {
+        //mParentActivity = parent;
         mCoins = coins;
-       // mListener = listener;
+        mListener = listener;
     }
+
 
     public interface RecyclerViewClickListener {
         void onClick(View view, int position);
