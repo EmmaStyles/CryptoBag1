@@ -7,7 +7,15 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
+
+import java.text.Format;
+import java.text.NumberFormat;
+
+import static infs3634.cryptobag1.Coin.searchCoin;
 
 
 /**
@@ -18,44 +26,27 @@ import android.widget.TextView;
 public class DetailFragment extends Fragment {
     public static final String ARG_ITEM_ID = "item_id";
     private Coin mCoin;
-    public static final String ARG_PARAM1 = "param1";
-    public static final String ARG_PARAM2 = "param2";
+    private TextView mName;
+    private TextView mSymbol;
+    private TextView mValue;
+    private TextView mChange1h;
+    private TextView mChange24h;
+    private TextView mChange7d;
+    private TextView mMarketcap;
+    private TextView mVolume;
+    private ImageView mSearch;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public DetailFragment() {
         // Required empty public constructor
     }
 
-//    @Override
-//    public void onCreate(Bundle saveInstantSState)
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment DetailFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static DetailFragment newInstance(String param1, String param2) {
-        DetailFragment fragment = new DetailFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments().containsKey(ARG_ITEM_ID) {
+        if (getArguments().containsKey(ARG_ITEM_ID) ){
             mCoin = Coin.getCoin(getArguments().getString(ARG_ITEM_ID));
             this.getActivity().setTitle(mCoin.getName());
-
         }
     }
 
@@ -64,21 +55,27 @@ public class DetailFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         if(mCoin != null){
-            NumberFormat formatter = numberFormat.getCurrencyInstance();
+            NumberFormat formatter = NumberFormat.getCurrencyInstance();
             ((TextView) rootView.findViewById(R.id.tvName)).setText(mCoin.getName());
             ((TextView) rootView.findViewById(R.id.tvSymbol)).setText(mCoin.getSymbol());
-            mValue.setText(formatter.format(mCoin.getValue()));
-            mChange1h.setText(String.valueOf(mCoin.getChange1h()) + "%");
-            mChange24h.setText(String.valueOf(mCoin.getChange24h()) + "%");
-            mChange7d.setText(String.valueOf(mCoin.getChange7d()) + "%");
-            mMarketcap.setText(formatter.format(mCoin.getMarketcap()));
-            mVolume.setText(formatter.format(mCoin.getVolume()));
-            mSearch.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    searchCoin(mCoin.getName());
-                }
-            });
+            ((TextView) rootView.findViewById(R.id.tvValue)).setText(formatter.format(mCoin.getSymbol()));
+            ((TextView) rootView.findViewById(R.id.tvChange1hField)).setText(String.valueOf(mCoin.getChange1h()) + "%");
+            ((TextView) rootView.findViewById(R.id.tvChange24hField)).setText(String.valueOf(mCoin.getChange24h()) + "%");
+            ((TextView) rootView.findViewById(R.id.tvChange7dField)).setText(String.valueOf(mCoin.getChange7d()) + "%");
+            ((TextView) rootView.findViewById(R.id.tvMarketcapField)).setText(formatter.format(mCoin.getMarketcap()));
+            ((TextView) rootView.findViewById(R.id.tvVolumeField)).setText(formatter.format(mCoin.getVolume()));
+//            mValue.setText(formatter.format(mCoin.getValue()));
+//            mChange1h.setText(String.valueOf(mCoin.getChange1h()) + "%");
+//            mChange24h.setText(String.valueOf(mCoin.getChange24h()) + "%");
+//            mChange7d.setText(String.valueOf(mCoin.getChange7d()) + "%");
+//            mMarketcap.setText(formatter.format(mCoin.getMarketcap()));
+//            mVolume.setText(formatter.format(mCoin.getVolume()));
+//            mSearch.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View v) {
+//                    searchCoin(mCoin.getName());
+//                }
+//            });
         }
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_detail, container, false);

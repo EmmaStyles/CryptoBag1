@@ -39,36 +39,36 @@ public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.CoinViewHolder
     public CoinAdapter(MainActivity parent, ArrayList<Coin> coins, boolean mTwoPane) {
         mParentActivity = parent;
         mCoins = coins;
-        mListener = listener;
+       // mListener = listener;
     }
 
     public interface RecyclerViewClickListener {
         void onClick(View view, int position);
     }
 
-    public static class CoinViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class CoinViewHolder extends RecyclerView.ViewHolder {
         public TextView name, value, change;
-        private RecyclerViewClickListener mListener;
+        //private RecyclerViewClickListener mListener;
 
-        public CoinViewHolder(View v, RecyclerViewClickListener listener) {
+        public CoinViewHolder(View v) {
             super(v);
-            mListener = listener;
-            v.setOnClickListener(this);
+           // mListener = listener;
+           // v.setOnClickListener(this);
             name = v.findViewById(R.id.tvName);
             value = v.findViewById(R.id.tvValue);
             change = v.findViewById(R.id.tvChange);
         }
 
-        @Override
-        public void onClick(View view) {
-            mListener.onClick(view, getAdapterPosition());
-        }
+//        @Override
+//        public void onClick(View view) {
+//            mListener.onClick(view, getAdapterPosition());
+//        }
     }
 
     @Override
     public CoinAdapter.CoinViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.coin_list_row, parent, false);
-        return new CoinViewHolder(v, mListener);
+        return new CoinViewHolder(v);
     }
 
     // Replace the contents of a view (invoked by the layout manager)

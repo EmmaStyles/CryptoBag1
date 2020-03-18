@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.i(TAG, "onCreate Called");
+//        Log.i(TAG, "onCreate Called");
         setContentView(R.layout.activity_main);
 
         if(findViewById(R.id.detail_container) != null){
@@ -30,22 +30,24 @@ public class MainActivity extends AppCompatActivity {
 
         mRecyclerView = findViewById(R.id.rvList);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
+
+//        mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        CoinAdapter.RecyclerViewClickListener listener = new CoinAdapter.RecyclerViewClickListener() {
-            @Override
-            public void onClick(View view, int position) {
-                launchDetailActivity(position);
-            }
-        };
-        mAdapter = new CoinAdapter(Coin.getCoins(), listener);
+//        CoinAdapter.RecyclerViewClickListener listener = new CoinAdapter.RecyclerViewClickListener() {
+//            @Override
+//            public void onClick(View view, int position) {
+//                launchDetailActivity(position);
+//            }
+//        };
+//        mAdapter = new CoinAdapter(Coin.getCoins(), listener);
+        RecyclerView.Adapter mAdapter = new CoinAdapter(this, Coin.getCoins(), mTwoPane);
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    private void launchDetailActivity(int position){
-        Intent intent = new Intent( this, DetailActivity.class);
-        intent.putExtra(EXTRA_MESSAGE, position);
-        startActivity(intent);
-    }
+//    private void launchDetailActivity(int position){
+//        Intent intent = new Intent( this, DetailActivity.class);
+//        intent.putExtra(EXTRA_MESSAGE, position);
+//        startActivity(intent);
+//    }
 
 }
