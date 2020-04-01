@@ -99,6 +99,11 @@ public class Coin {
             return null;
     }
 
+    @Override
+    public String toString() {
+        return symbol;
+    }
+
     public static ArrayList<Coin> getCoins() {
         ArrayList<Coin> coins = new ArrayList<>();
         coins.add(new Coin("Bitcoin", "BTC", 8662.99, -5.30, 0.06, 6.25, 157394075212.34, 26248451879.217194));

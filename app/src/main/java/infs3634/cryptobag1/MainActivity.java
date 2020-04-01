@@ -11,48 +11,50 @@ import android.os.Bundle;
 import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String EXTRA_MESSAGE = "au.edu.unsw.infs3634.beers.MESSAGE";
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+
     private boolean mTwoPane;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mRecyclerView = findViewById(R.id.rvList);
+        if (findViewById(R.id.detail_container) != null) {
+            mTwoPane = true;
+        }
+        RecyclerView mRecyclerView = findViewById(R.id.rvList);
         mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mTwoPane = findViewById(R.id.detailContainer) != null;
 
-        CoinAdapter.RecyclerViewClickListener listener = new CoinAdapter.RecyclerViewClickListener(){
-            @Override
-            public void onClick(View view, int position) {
-                if (mTwoPane == true) {
-                    final FragmentManager fragmentManager = getSupportFragmentManager();
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    Bundle arguments = new Bundle();
-                    arguments.putInt("position", position);
-                    DetailFragment fragment = new DetailFragment();
-                    fragment.setArguments(arguments);
-                    transaction.replace(R.id.detailContainer, fragment);
-                    transaction.commit();
-                } else {
-                    launchDetailActivity(position);
-                }
-            }
-        };
-        mAdapter = new CoinAdapter(Coin.getCoins(), listener);
+
+
+        mTwoPane = findViewById(R.id.detail_container) != null;
+        RecyclerView.Adapter mAdapter = new CoinAdapter(this, Coin.getCoins(), mTwoPane);
         mRecyclerView.setAdapter(mAdapter);
+    }
 
-    }
-    private void launchDetailActivity(int position){
-        Intent intent = new Intent( this, DetailActivity.class);
-        intent.putExtra(EXTRA_MESSAGE, position);
-        startActivity(intent);
-    }
+//        CoinAdapter.RecyclerViewClickListener listener = new CoinAdapter.RecyclerViewClickListener(){
+//            @Override
+//            public void onClick(View view, int position) {
+//                if (mTwoPane == true) {
+//                    final FragmentManager fragmentManager = getSupportFragmentManager();
+//                    FragmentTransaction transaction = fragmentManager.beginTransaction();
+//                    Bundle arguments = new Bundle();
+//                    arguments.putInt("position", position);
+//                    DetailFragment fragment = new DetailFragment();
+//                    fragment.setArguments(arguments);
+//                    transaction.replace(R.id.detailContainer, fragment);
+//                    transaction.commit();
+//                } else {
+//                    launchDetailActivity(position);
+//                }
+//            }
+//        };
+//    }
+//    private void launchDetailActivity(int position){
+//        Intent intent = new Intent( this, DetailActivity.class);
+//        intent.putExtra(EXTRA_MESSAGE, position);
+//        startActivity(intent);
+//    }
 
 }

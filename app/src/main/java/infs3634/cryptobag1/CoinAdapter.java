@@ -11,11 +11,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.CoinViewHolder> {
     private MainActivity mParentActivity;
-    private ArrayList<Coin> mCoins;
-    private RecyclerViewClickListener mListener;
+    private List<Coin> mCoins;
     private boolean mTwoPane;
     private View.OnClickListener mOnClickListener = new View.OnClickListener() {
         @Override
@@ -26,51 +26,38 @@ public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.CoinViewHolder
                 arguments.putString(DetailFragment.ARG_ITEM_ID, coin.getSymbol());
                 DetailFragment fragment = new DetailFragment();
                 fragment.setArguments(arguments);
-                mParentActivity.getSupportFragmentManager().beginTransaction().replace(R.id.detailContainer, fragment).commit();
+                mParentActivity.getSupportFragmentManager().beginTransaction().replace(R.id.detail_container, fragment).commit();
             }
             else {
                 Context context = v.getContext();
                 Intent intent = new Intent(context, DetailActivity.class);
+                intent.putExtra(DetailFragment.ARG_ITEM_ID, coin.getSymbol());
+                context.startActivity(intent);
             }
         }
     };
 
-
-    public CoinAdapter(ArrayList<Coin> coins, RecyclerViewClickListener listener) {
-        //mParentActivity = parent;
+    public CoinAdapter(MainActivity parent, ArrayList<Coin> coins, boolean twoPane) {
+        mParentActivity = parent;
         mCoins = coins;
-        mListener = listener;
+        mTwoPane = twoPane;
     }
 
-
-    public interface RecyclerViewClickListener {
-        void onClick(View view, int position);
-    }
-
-    public static class CoinViewHolder extends RecyclerView.ViewHolder {
+    public static class CoinViewHolder extends RecyclerView.ViewHolder  {
         public TextView name, value, change;
-        //private RecyclerViewClickListener mListener;
-
         public CoinViewHolder(View v) {
             super(v);
-           // mListener = listener;
-           // v.setOnClickListener(this);
             name = v.findViewById(R.id.tvName);
             value = v.findViewById(R.id.tvValue);
             change = v.findViewById(R.id.tvChange);
         }
-
-//        @Override
-//        public void onClick(View view) {
-//            mListener.onClick(view, getAdapterPosition());
-//        }
     }
-
     @Override
     public CoinAdapter.CoinViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.coin_list_row, parent, false);
         return new CoinViewHolder(v);
     }
+
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
@@ -79,7 +66,8 @@ public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.CoinViewHolder
         holder.name.setText(coin.getName());
         holder.value.setText(NumberFormat.getCurrencyInstance().format(coin.getValue()));
         holder.change.setText(String.valueOf(coin.getChange1h()) + " %");
-
+        holder.itemView.setTag(coin);
+        holder.itemView.setOnClickListener(mOnClickListener);
     }
 
     // Return the size of your dataset (invoked by the layout manager)
