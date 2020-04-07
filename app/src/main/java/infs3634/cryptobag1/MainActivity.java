@@ -1,22 +1,31 @@
 package infs3634.cryptobag1;
 
+import android.os.Bundle;
+import android.util.Log;
+
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.View;
-import com.google.gson.Gson;
-import java.util.List;
 import infs3634.cryptobag1.Entities.Coin;
 import infs3634.cryptobag1.Entities.CoinLoreResponse;
+import com.google.gson.Gson;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 public class MainActivity extends AppCompatActivity {
-
     private boolean mTwoPane;
+    private CoinAdapter mAdapter;
+    private String Tag = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,38 +39,30 @@ public class MainActivity extends AppCompatActivity {
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mTwoPane = findViewById(R.id.detail_container) != null;
-        //RecyclerView.Adapter mAdapter = new CoinAdapter(this, Coin.getCoins(), mTwoPane);
-        Gson gson = new Gson();
-        CoinLoreResponse response = gson.fromJson(CoinLoreResponse.json, CoinLoreResponse.class);
-        List<Coin> coins = response.getData();
-        RecyclerView.Adapter mAdapter = new CoinAdapter(this, coins, mTwoPane);
+
+        mAdapter = new CoinAdapter(this, new ArrayList<Coin>(), mTwoPane);
         mRecyclerView.setAdapter(mAdapter);
 
+        //try{
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.coinlore.net").addConverterFactory(GsonConverterFactory.create()).build();
+        CoinService service = retrofit.create(CoinService.class);
+        Call<CoinLoreResponse> coinsCall = service.getCoins();
+
+        coinsCall.enqueue(new Callback<CoinLoreResponse>() {
+            @Override
+            public void onResponse(Call<CoinLoreResponse> call, Response<CoinLoreResponse> response) {
+                Log.d(Tag, "OnResponse: Success");
+                List<Coin> coins = response.body().getData();
+                mAdapter.setCoins(coins);
+
+            }
+
+            @Override
+            public void onFailure(Call<CoinLoreResponse> call, Throwable t) {
+                Log.d(Tag, "OnFailure: Failure");
+            }
+        });
 
     }
-
-//        CoinAdapter.RecyclerViewClickListener listener = new CoinAdapter.RecyclerViewClickListener(){
-//            @Override
-//            public void onClick(View view, int position) {
-//                if (mTwoPane == true) {
-//                    final FragmentManager fragmentManager = getSupportFragmentManager();
-//                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-//                    Bundle arguments = new Bundle();
-//                    arguments.putInt("position", position);
-//                    DetailFragment fragment = new DetailFragment();
-//                    fragment.setArguments(arguments);
-//                    transaction.replace(R.id.detailContainer, fragment);
-//                    transaction.commit();
-//                } else {
-//                    launchDetailActivity(position);
-//                }
-//            }
-//        };
-//    }
-//    private void launchDetailActivity(int position){
-//        Intent intent = new Intent( this, DetailActivity.class);
-//        intent.putExtra(EXTRA_MESSAGE, position);
-//        startActivity(intent);
-//    }
 
 }

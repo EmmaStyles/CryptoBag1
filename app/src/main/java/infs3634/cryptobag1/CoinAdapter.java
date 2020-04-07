@@ -76,4 +76,10 @@ public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.CoinViewHolder
     public int getItemCount() {
         return mCoins.size();
     }
+
+    public void setCoins(List<Coin> coins) {
+        mCoins.clear();;
+        mCoins.addAll(coins);
+        notifyDataSetChanged();
+    }
 }

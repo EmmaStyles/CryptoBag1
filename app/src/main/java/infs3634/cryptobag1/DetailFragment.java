@@ -3,6 +3,7 @@ package infs3634.cryptobag1;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +12,25 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
-import java.text.NumberFormat;
-import com.google.gson.Gson;
-import java.util.List;
 import infs3634.cryptobag1.Entities.Coin;
 import infs3634.cryptobag1.Entities.CoinLoreResponse;
+import com.google.gson.Gson;
+
+import java.io.IOException;
+import java.text.NumberFormat;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 public class DetailFragment extends Fragment {
     public static final String ARG_ITEM_ID = "item_id";
     private Coin mCoin;
+    private String Tag = "DetailFragment";
 
     public DetailFragment() {}
 
@@ -27,23 +38,41 @@ public class DetailFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(getArguments().containsKey(ARG_ITEM_ID)) {
-            Gson gson = new Gson();
-            CoinLoreResponse response = gson.fromJson(CoinLoreResponse.json, CoinLoreResponse.class);
-            List<Coin> coins = response.getData();
-            for(Coin coin : coins) {
-                if(coin.getId().equals(getArguments().getString(ARG_ITEM_ID))) {
-                    mCoin = coin;
+        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.coinlore.net").addConverterFactory(GsonConverterFactory.create()).build();
+        CoinService service = retrofit.create(CoinService.class);
+        Call<CoinLoreResponse> coinsCall = service.getCoins();
+
+        coinsCall.enqueue(new Callback<CoinLoreResponse>() {
+            @Override
+            public void onResponse(Call<CoinLoreResponse> call, Response<CoinLoreResponse> response) {
+                Log.d(Tag, "OnResponse: Success");
+                List<Coin> coins = response.body().getData();
+                for(Coin coin : coins) {
+                    if(coin.getId().equals(getArguments().getString(ARG_ITEM_ID))) {
+                        mCoin = coin;
+                        break;
+                    }
                 }
+                updateUi();
+                DetailFragment.this.getActivity().setTitle(mCoin.getName());
             }
-            this.getActivity().setTitle(mCoin.getName());
-        }
+
+            @Override
+            public void onFailure(Call<CoinLoreResponse> call, Throwable t) {
+                Log.d(Tag, "OnFailure: Failure");
+            }
+        });
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-
+        updateUi();
+        return rootView;
+    }
+    private void updateUi() {
+        View rootView = getView();
         if(mCoin != null) {
             NumberFormat formatter = NumberFormat.getCurrencyInstance();
             ((TextView) rootView.findViewById(R.id.tvName)).setText(mCoin.getName());
@@ -61,8 +90,6 @@ public class DetailFragment extends Fragment {
                 }
             });
         }
-
-        return rootView;
     }
 
     private void searchCoin(String name) {
