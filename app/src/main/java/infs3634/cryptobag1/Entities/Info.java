@@ -59,10 +59,4 @@ public class Info implements Serializable
         this.time = time;
         return this;
     }
-
-//    @Override
-//    public String toString() {
-//        return new ToStringBuilder(this).append("coinsNum", coinsNum).append("time", time).toString();
-//    }
-
 }

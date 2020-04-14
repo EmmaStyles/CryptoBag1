@@ -1,18 +1,18 @@
 package infs3634.cryptobag1;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+        import android.content.Context;
+        import android.content.Intent;
+        import android.os.Bundle;
+        import android.view.LayoutInflater;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.widget.TextView;
 
-import androidx.recyclerview.widget.RecyclerView;
+        import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
-import infs3634.cryptobag1.Entities.Coin;
+        import java.text.NumberFormat;
+        import java.util.ArrayList;
+        import java.util.List;
+        import infs3634.cryptobag1.Entities.Coin;
 
 public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.CoinViewHolder> {
     private MainActivity mParentActivity;

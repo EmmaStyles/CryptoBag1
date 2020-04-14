@@ -1,5 +1,6 @@
 package infs3634.cryptobag1;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -25,7 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainActivity extends AppCompatActivity {
     private boolean mTwoPane;
     private CoinAdapter mAdapter;
-    private String Tag = "MainActivity";
+    private String TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,26 +44,31 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new CoinAdapter(this, new ArrayList<Coin>(), mTwoPane);
         mRecyclerView.setAdapter(mAdapter);
 
-        //try{
-        Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.coinlore.net").addConverterFactory(GsonConverterFactory.create()).build();
-        CoinService service = retrofit.create(CoinService.class);
-        Call<CoinLoreResponse> coinsCall = service.getCoins();
-
-        coinsCall.enqueue(new Callback<CoinLoreResponse>() {
-            @Override
-            public void onResponse(Call<CoinLoreResponse> call, Response<CoinLoreResponse> response) {
-                Log.d(Tag, "OnResponse: Success");
-                List<Coin> coins = response.body().getData();
-                mAdapter.setCoins(coins);
-
-            }
-
-            @Override
-            public void onFailure(Call<CoinLoreResponse> call, Throwable t) {
-                Log.d(Tag, "OnFailure: Failure");
-            }
-        });
-
+        new GetCoinTask().execute();
     }
 
+    private class GetCoinTask extends AsyncTask<Void, Void, List<Coin>> {
+        @Override
+        protected List<Coin> doInBackground(Void... voids) {
+            try {
+                Retrofit retrofit = new Retrofit.Builder().baseUrl("https://api.coinlore.net").addConverterFactory(GsonConverterFactory.create()).build();
+
+                CoinService service = retrofit.create(CoinService.class);
+                Call<CoinLoreResponse> coinsCall = service.getCoins();
+
+                Response<CoinLoreResponse> coinResponse = coinsCall.execute();
+                List<Coin> coins = coinResponse.body().getData();
+                return coins;
+            } catch (IOException e) {
+                Log.d(TAG, "OnFailure: FAILURE");
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<Coin> coins) {
+            mAdapter.setCoins(coins);
+        }
+    }
 }

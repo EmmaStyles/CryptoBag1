@@ -312,9 +312,4 @@ public class Coin implements Serializable
         return this;
     }
 
-//    @Override
-//    public String toString() {
-//        return new ToStringBuilder(this).append("id", id).append("symbol", symbol).append("name", name).append("nameid", nameid).append("rank", rank).append("priceUsd", priceUsd).append("percentChange24h", percentChange24h).append("percentChange1h", percentChange1h).append("percentChange7d", percentChange7d).append("priceBtc", priceBtc).append("marketCapUsd", marketCapUsd).append("volume24", volume24).append("volume24a", volume24a).append("csupply", csupply).append("tsupply", tsupply).append("msupply", msupply).toString();
-//    }
-
 }
