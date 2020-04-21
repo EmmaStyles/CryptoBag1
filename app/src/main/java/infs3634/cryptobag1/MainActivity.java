@@ -7,6 +7,7 @@ import android.util.Log;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.room.Room;
 
 import infs3634.cryptobag1.Entities.Coin;
 import infs3634.cryptobag1.Entities.CoinLoreResponse;
@@ -27,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean mTwoPane;
     private CoinAdapter mAdapter;
     private String TAG = "MainActivity";
+    private CoinDatabase mDb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +46,9 @@ public class MainActivity extends AppCompatActivity {
         mAdapter = new CoinAdapter(this, new ArrayList<Coin>(), mTwoPane);
         mRecyclerView.setAdapter(mAdapter);
 
+        mDb = Room.databaseBuilder(getApplicationContext(), CoinDatabase.class, "coin-database").build();
+
+        new GetCoinDBTask().execute();
         new GetCoinTask().execute();
     }
 
@@ -58,6 +63,10 @@ public class MainActivity extends AppCompatActivity {
 
                 Response<CoinLoreResponse> coinResponse = coinsCall.execute();
                 List<Coin> coins = coinResponse.body().getData();
+
+                mDb.coinDao().deleteAll(mDb.coinDao().getCoins().toArray(new Coin[mDb.coinDao().getCoins().size()]));
+                mDb.coinDao().insertAll(coins.toArray(new Coin[coins.size()]));
+
                 return coins;
             } catch (IOException e) {
                 Log.d(TAG, "OnFailure: FAILURE");
@@ -68,6 +77,19 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(List<Coin> coins) {
+            mAdapter.setCoins(coins);
+        }
+    }
+
+    private class GetCoinDBTask extends AsyncTask<Void, Void, List<Coin>>{
+
+        @Override
+        protected List<Coin> doInBackground(Void... voids) {
+            return mDb.coinDao().getCoins();
+        }
+
+        @Override
+        protected void onPostExecute(List<Coin> coins){
             mAdapter.setCoins(coins);
         }
     }

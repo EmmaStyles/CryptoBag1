@@ -1,13 +1,17 @@
 package infs3634.cryptobag1;
         import android.content.Context;
         import android.content.Intent;
+        import android.graphics.Color;
         import android.os.Bundle;
         import android.view.LayoutInflater;
         import android.view.View;
         import android.view.ViewGroup;
         import android.widget.TextView;
+        import android.widget.ImageView;
 
         import androidx.recyclerview.widget.RecyclerView;
+
+        import com.bumptech.glide.Glide;
 
         import java.text.NumberFormat;
         import java.util.ArrayList;
@@ -46,11 +50,13 @@ public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.CoinViewHolder
 
     public static class CoinViewHolder extends RecyclerView.ViewHolder  {
         public TextView name, value, change;
+        public ImageView image;
         public CoinViewHolder(View v) {
             super(v);
             name = v.findViewById(R.id.tvName);
             value = v.findViewById(R.id.tvValue);
             change = v.findViewById(R.id.tvChange);
+            image = v.findViewById(R.id.ivArt);
         }
     }
     @Override
@@ -64,9 +70,19 @@ public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.CoinViewHolder
     @Override
     public void onBindViewHolder(CoinViewHolder holder, int position) {
         Coin coin = mCoins.get(position);
+        Glide.with(holder.itemView)
+                .load("https://c1.coinlore.com/img/25x25/" + coin.getNameid() + ".png")
+                .fitCenter()
+                .into(holder.image);
         holder.name.setText(coin.getName());
         holder.value.setText(NumberFormat.getCurrencyInstance().format(Double.valueOf(coin.getPriceUsd())));
         holder.change.setText(coin.getPercentChange24h() + " %");
+        if (Double.valueOf(coin.getPercentChange24h()) >0) {
+            holder.change.setTextColor(Color.GREEN);
+        } else {
+            holder.change.setTextColor(Color.RED);
+        }
+
         holder.itemView.setTag(coin);
         holder.itemView.setOnClickListener(mOnClickListener);
     }
